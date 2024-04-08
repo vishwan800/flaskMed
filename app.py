@@ -17,47 +17,6 @@ conn_str = "Driver={ODBC Driver 17 for SQL Server};Server=tcp:aurexdb.database.w
 def hello():
     return render_template("index.html")
 
-
-@app.route("/table")
-def datas():
-    # Sudoc Connection Properties Checking
-    conn = zoom.Connection("z3950.bnf.fr", 2211)
-
-    # Set connection properties
-    conn.user = "Z3950"
-    conn.password = "Z3950_BNF"
-    conn.databaseName = "TOUT-LATIN1"
-    conn.preferredRecordSyntax = "UNIMARC"
-    if conn:
-        print("Connection Establised!")
-        try:
-            # Create a CCL query for a specific title and author
-            tit = "Recueil articles publies"
-            aut = "Barthes"
-            # query_string = '@and @attr 1=4 @attr 2=3 @attr 3=3 @attr 4=2 @attr 5=1 @attr 6=1 "+{}+" @attr 1=1003 @attr 2=3 @attr 3=3 @attr 4=2 @attr 5=100 @attr 6=1 "{}"'.format(
-            #     tit, aut
-            # )
-            query_string = (
-                '@attr 1=4 @attr 2=3 @attr 3=3 @attr 4=2 @attr 5=1 @attr 6=1 "{}"'.tit
-            )
-            query = zoom.Query("PQF", query_string)
-
-            # Perform the search
-            res = conn.search(query)
-            # Print the result of the first record
-            return str(res[0])
-            # print (type(res[0]))
-
-        except Exception as e:
-            print("Error: Problem in Fetching!")
-
-    else:
-        print("Connection Failed!")
-
-    conn.close()
-    # return render_template('table-basic.html',data=data)
-
-
 @app.route("/dbconnect")
 def dbConnect():
     # conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:aurexdb.database.windows.net;Database=AUREXDB1;Uid=db_su;Pwd={=!Aurexus21!=};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
@@ -125,11 +84,6 @@ def renderTemplate():
 @app.route("/dashboard")
 def renderDashboard():
     return render_template("index.html", now=datetime.utcnow())
-    
-
-@app.route("/roi")
-def renderROI():
-    return render_template("roi.html")
     
 
 @app.route("/base")
