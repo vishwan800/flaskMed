@@ -4,7 +4,6 @@ from datetime import datetime
 
 import pyodbc
 from flask import Flask, jsonify, render_template, request, Response
-from PyZ3950 import z3950, zoom
 from fuzzywuzzy import process
 
 app = Flask(__name__, template_folder="templates")  # Flask constructor
