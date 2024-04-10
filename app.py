@@ -1,8 +1,6 @@
 # an object of WSGI application
 
 from datetime import datetime
-
-import pyodbc
 from flask import Flask, jsonify, render_template, request, Response
 from fuzzywuzzy import process
 
@@ -16,61 +14,6 @@ conn_str = "Driver={ODBC Driver 17 for SQL Server};Server=tcp:aurexdb.database.w
 def hello():
     return render_template("index.html")
 
-@app.route("/dbconnect")
-def dbConnect():
-    # conn_str = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:aurexdb.database.windows.net;Database=AUREXDB1;Uid=db_su;Pwd={=!Aurexus21!=};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
-    cnxn = pyodbc.connect(conn_str)
-    html_content = ""
-    if cnxn:
-        cursor = cnxn.cursor()
-        cursor.execute("SELECT top(10) * FROM HUB_TEST")
-        rows = cursor.fetchall()
-        
-        #for row in rows:
-            #return str(row)
-        html_content += "<table class='table' style=''>"
-        
-        # Generate table headers
-        #for column in cursor.description:
-            #html_content += "<th>" + column[0] + "</th>"
-        #html_content += "</tr>"
-        
-        html_content += "<thead><tr>"
-        html_content += "<th>ID</th>"
-        html_content += "<th>Image</th>"
-        html_content += "<th>Cote</th>"
-        html_content += "<th>Localisation</th>"
-        html_content += "<th>Numserie</th>"
-        html_content += "<th>Serietra</th>"
-        html_content += "<th>Articleno</th>"
-        html_content += "<th>Action</th>"
-        html_content += "</tr></thead>"
-        html_content += "<tbody>"
-        #for column_name in ['ID', 'Image', 'cote', 'Localisation', 'numserie', 'serietra', 'articleno']:  # Specify the column names you want in the header
-            #html_content += "<th>" + column_name + "</th>"
-        #html_content += "</tr></thead>"
-        
-        # Generate table rows
-        for row in rows:
-            html_content += "<tr>"
-            #for value in row:
-                #html_content += "<td>" + str(value) + "</td>"
-            #html_content += "</tr>"
-            row_dict = dict(zip([column[0] for column in cursor.description], row))
-            for column_name in ['ID', 'Image', 'cote', 'Localisation', 'numserie', 'serietra', 'articleno']:
-                html_content += "<td>" + str(row_dict[column_name]) + "</td>"
-            html_content += "<td><button class='btn-sm btn-primary'><i class='fa-solid fa-edit'></i></button></td>"
-            html_content += "</tr>"
-        
-        html_content += "</tbody></table>"    
-    else:
-        print("Problem in Connection...")
-    # Close the cursor and connection
-    cursor.close()
-    cnxn.close()
-    return render_template("base2.html",html_content=html_content)
-    #return Response(html_content, mimetype='text/html')
-
 @app.route("/base")
 def renderBase():
     return render_template("base.html")
@@ -79,11 +22,9 @@ def renderBase():
 def renderTemplate():
     return render_template("table-export.html", now=datetime.utcnow())
 
-
 @app.route("/dashboard")
 def renderDashboard():
     return render_template("index.html", now=datetime.utcnow())
-    
 
 @app.route("/base")
 def renderBase():
